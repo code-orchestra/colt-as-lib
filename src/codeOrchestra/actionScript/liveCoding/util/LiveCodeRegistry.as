@@ -81,22 +81,14 @@ package codeOrchestra.actionScript.liveCoding.util{
       
       if ( !(isStaticMethod) ) {
         getDefinitionByName(className).prototype[methodName] =         function ( ...rest ) : * {
-          {
-            LogUtil.enterLogScope("livecoding", "9091078376703266061");
-            var method : Class  = getMethod(methodId);
-            var instance : *  = new method(this);
-            return instance.run.apply(instance, rest);
-            LogUtil.exitLogScope("livecoding", "9091078376703266061");
-          }
+          var method : Class  = getMethod(methodId);
+          var instance : *  = new method(this);
+          return instance.run.apply(instance, rest);
         };
       }else{
         getDefinitionByName(className)[methodName] =         function ( ...rest ) : * {
-          {
-            LogUtil.enterLogScope("livecoding", "7473368133778549627");
-            var method : Class  = getMethod(methodId);
-            return method.run.apply(null, rest);
-            LogUtil.exitLogScope("livecoding", "7473368133778549627");
-          }
+          var method : Class  = getMethod(methodId);
+          return method.run.apply(null, rest);
         };
       }
     }
