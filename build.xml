@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<project name="COLT" default="main" basedir=".">
+	
+	<!-- Properties -->
+
+	<property file="build.properties"/>
+	<property name="flex.config.file" value="${basedir}/flex_config.xml"/>
+	<property name="flex.config.template" value="${basedir}/flex_config_template.xml"/>
+    
+   	<!-- Property for the platform.  -->
+    <condition property="isMac" value="true">
+        <os family="mac"/>
+    </condition>
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>	
+    <condition property="isLnx">
+        <and>
+          <os family="unix"/>    
+          <not>
+            <os family="mac"/>    
+          </not>
+        </and>
+    </condition>
+    
+    <!-- Targets -->
+
+	<target name="main" depends="config.build,make.mac,make.win,clean" description="Full build" />
+	
+	<target name="config.build">
+		<copy file="${flex.config.template}" tofile="${flex.config.file}" overwrite="true">
+			<filterset>
+				<filter token="OUTPUT_PATH" value="${swc.output.path}"/>
+				<filter token="BASE_DIR" value="${basedir}"/>				
+				<filter token="PLAYER_VERSION" value="${player.version}"/>
+			</filterset>
+		</copy>
+	</target>
+	
+	<target name="make.mac" if="isMac">
+		<exec executable="${flex.sdk.path}/bin/compc" dir="${flex.sdk.path}/bin">
+        	<arg value="-load-config+=${flex.config.file}"/>
+		</exec>	
+	</target>
+
+	<target name="make.win" if="isWindows">
+		<exec executable="${flex.sdk.path}/bin/compc.exe" dir="${flex.sdk.path}/bin">
+        	<arg value="-load-config+=${flex.config.file}"/>
+		</exec>	
+	</target>
+
+	<target name="clean">
+		<delete file="flex_config.xml" />
+	</target>
+
+</project>

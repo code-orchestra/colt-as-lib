@@ -1,0 +1,3 @@
+flex.sdk.path=/Users/buildserver/Downloads/flex_sdk_4-1
+player.version=11.1.0
+swc.output.path=/Users/buildserver/git/code-orchestra-lcs/lib/colt.swc
