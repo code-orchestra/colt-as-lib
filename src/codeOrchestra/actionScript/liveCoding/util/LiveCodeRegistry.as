@@ -133,7 +133,7 @@ package codeOrchestra.actionScript.liveCoding.util{
                 (CollectionsLanguageUtil.add(methods, methodChange, MethodChange) as MethodChange);
               } else if ( /^asset:/.test(token) ) {
                 var assetChange : AssetChange  = new AssetChange(token);
-                assetChange.event = new AssetUpdateEvent(assetChange.source);
+                assetChange.event = new AssetUpdateEvent(assetChange.source, assetChange.mimeType);
                 (CollectionsLanguageUtil.add(assets, assetChange, AssetChange) as AssetChange);
               }
             }
@@ -248,15 +248,17 @@ class AssetChange {
   public var source : String ;
   public var timestamp : String ;
   public var event : AssetUpdateEvent ;
+  public var mimeType : String ;
   public function AssetChange( data : String ){
     var c2 : Number;
     (c2 = -1);
     var tokens : Array  = data.split(":");
     className = tokens[c2 = 1];
     source = tokens[++c2];
+    mimeType = tokens[++c2];
     timestamp = tokens[++c2];
   }
   public function toString (  ) : String {
-    return "AssetChange { " + "className=" + this.className + ", " + "source=" + this.source + ", " + "timestamp=" + this.timestamp + ", " + "event=" + this.event + " }";
+    return "AssetChange { " + "className=" + this.className + ", " + "source=" + this.source + ", " + "timestamp=" + this.timestamp + ", " + "event=" + this.event + ", " + "mimeType=" + this.mimeType + " }";
   }
 }
