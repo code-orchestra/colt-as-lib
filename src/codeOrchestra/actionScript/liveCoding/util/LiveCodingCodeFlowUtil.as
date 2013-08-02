@@ -40,6 +40,9 @@ package codeOrchestra.actionScript.liveCoding.util{
       }
        */
     }
+    public static function checkRecursion2 ( reqursionId : String ) : void {
+      recursionCount--;
+    }
     public static function checkLoop ( loop : String ) : void {
       initCounter();
       if ( loop != lastLoop ) {
