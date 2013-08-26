@@ -34,11 +34,9 @@ package codeOrchestra.actionScript.liveCoding.util{
         recursionCount = 0;
       }
       recursionCount++;
-      /*
       if ( recursionCount > maxRecursionCount ) {
         throw new Error("Infinite recursion: " + reqursionId + ".");
       }
-       */
     }
     public static function checkRecursion2 ( reqursionId : String ) : void {
       recursionCount--;
