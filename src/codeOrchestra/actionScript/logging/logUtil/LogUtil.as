@@ -9,6 +9,7 @@ package codeOrchestra.actionScript.logging.logUtil{
   import flash.utils.getTimer;
   import flash.utils.Dictionary;
   import flash.system.Capabilities;
+  import flash.system.fscommand;
   
   public class LogUtil {
     private static var socket : XMLSocket ;
@@ -167,7 +168,24 @@ package codeOrchestra.actionScript.logging.logUtil{
     public static function selectNode ( modelId : String, nodeId : String ) : void {
       log("select-node", nodeId, modelId, "", "");
     }
+	
+	private static var sessionId:String;
+	private static var lch:LocalConnectionHandler;
+	private static function checkSessionId (newSessionId:String):void {
+		if (sessionId != newSessionId) {
+			// try to close ourselves
+			fscommand("quit");
+		}
+	}
+	
     public static function startLiveCodingSession ( broadcastId : String ) : String {
+	  sessionId = broadcastId;
+	  
+		lch = new LocalConnectionHandler();
+		lch.sendNewSessionId (sessionId);
+		lch.connect (checkSessionId);
+
+	
       log("start-live-coding-session", "", "", "", broadcastId + ":" + clientId + ":" + Capabilities.serverString);
       return clientId;
     }
@@ -210,6 +228,46 @@ package codeOrchestra.actionScript.logging.logUtil{
       }
     }
   }
+}
+
+import flash.events.StatusEvent;
+import flash.net.LocalConnection;
+class LocalConnectionHandler {
+	// max number of connections
+	private const N:int = 123;
+	
+	private var conn:LocalConnection;
+	private var callback:Function;
+	public function LocalConnectionHandler () {
+		conn = new LocalConnection();
+		conn.addEventListener(StatusEvent.STATUS, ignoreStatus);
+	}
+	private function ignoreStatus (e:StatusEvent):void {
+	}
+	// outgoing
+	public function sendNewSessionId (newSessionId:String):void {
+		for (var i:int = 0; i < N; i++) {
+			conn.send("colt." + i, "handler", newSessionId);
+		}
+	}
+	// incoming
+	public function connect (callback:Function):void {
+		conn.client = this; this.callback = callback;
+		
+		var i:int = 0;
+		while (i < N) {
+			try {
+				conn.connect ("colt." + i);
+				break;
+			} catch (e:ArgumentError) {
+				// this name is already used
+				i++;
+			}
+		}
+	}
+	public function handler (newSessionId:String):void {
+		callback (newSessionId);
+	}
 }
 
 
