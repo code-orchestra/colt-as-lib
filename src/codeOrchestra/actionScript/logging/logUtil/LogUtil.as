@@ -234,7 +234,7 @@ import flash.events.StatusEvent;
 import flash.net.LocalConnection;
 class LocalConnectionHandler {
 	// max number of connections
-	private const N:int = 123;
+	private const N:int = 23;
 	
 	private var conn:LocalConnection;
 	private var callback:Function;
